@@ -15,8 +15,8 @@ pipeline {
 
     stage('Copy source') {
       steps {
-         git 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git' /tmp/boxfuse-sample-java-war-hello
-         git 'https://github.com/DmitriiSA/hw11.git' /tmp/hw11
+         git 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git /tmp/boxfuse-sample-java-war-hello'
+         git 'https://github.com/DmitriiSA/hw11.git /tmp/hw11'
         sh 'ssh-keyscan -H devbuild-srv01 >> ~/.ssh/known_hosts'
         sh 'scp jenkins@devbuild-srv01:/home/jenkins/build/configs/staging/gateway-api/application-business-config-defaults.yml gateway-api/src/main/resources/application-business-config-defaults.yml'
       }
@@ -24,8 +24,7 @@ pipeline {
 
     stage('Build war') {
       steps {
-        sh 'cd /tmp/boxfuse-sample-java-war-hello && \
-            mvn package'
+        sh 'cd /tmp/boxfuse-sample-java-war-hello && mvn package'
         sh 'cp /tmp/boxfuse-sample-java-war-hello/target/hello-1.0.war /tmp/hw11/hello-1.0.war'
       }
     }
@@ -34,7 +33,7 @@ pipeline {
       steps {
         sh 'cd  /tmp/hw11/'
         sh 'docker -f dockerfile-app -t jen-webapp .'
-        sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod
+        sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
       }
     }
 
