@@ -2,7 +2,7 @@ pipeline {
   agent {
 
     docker {
-      image 'https://hub.docker.com/r/rendoc72/mav-jenkins-ag'
+      image 'rendoc72/mav-jenkins-ag'
     }
 
   }
@@ -56,7 +56,7 @@ pipeline {
       steps {
         sh 'ssh-keyscan -H 158.160.189.0 >> ~/.ssh/known_hosts'
         sh '''ssh root@158.160.189.0 << EOF
-	sudo docker pull https://hub.docker.com/r/rendoc72/jen-webapp:prod
+	sudo docker pull rendoc72/jen-webapp:prod
 	docker run -d -p 8080:8080 jen-webapp:prod
 EOF'''
       }
