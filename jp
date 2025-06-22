@@ -49,13 +49,6 @@ pipeline {
       steps {
        echo 'This is stage Make docker image '
         // Проверяем, что докер работает
-                sh 'id -nG $(whoami)'
-                sh 'docker version'
-                sh '''
-                    echo "Проверка докер:"
-                     systemctl status docker
-                     systemctl start docker
-                '''
         sh 'cd  /tmp/hw11/'
         sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp .'
         sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
