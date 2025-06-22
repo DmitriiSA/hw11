@@ -3,7 +3,7 @@ pipeline {
 
     docker {
       image 'rendoc72/mav-jenkins-ag'
-      args '-v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.docker:/root/.docker'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.docker:/root/.docker'
     }
 
   }
@@ -37,23 +37,28 @@ pipeline {
       }
     }
 
+
     stage('Build war') {
       steps {
         echo 'This is stage Build war '
         sh 'cd /tmp/boxfuse-sample-java-war-hello && mvn package'
         sh 'cp /tmp/boxfuse-sample-java-war-hello/target/hello-1.0.war /tmp/hw11/hello-1.0.war'
+        sh ' ls -la /tmp/boxfuse-sample-java-war-hello/target'
+        sh ' ls -la /tmp/hw11'
       }
     }
+
 
     stage('Make docker image') {
       steps {
        echo 'This is stage Make docker image '
         // Проверяем, что докер работает
-        sh 'cd  /tmp/hw11/'
+        sh 'cd  /tmp/hw11'
         sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp .'
         sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
       }
     }
+
 
     stage('Login to Docker Hub') {
     steps{
@@ -62,6 +67,7 @@ pipeline {
 	echo 'Login Completed'
     }
     }
+
 
     stage('Push Image to Docker Hub') {
         steps{
@@ -74,11 +80,11 @@ pipeline {
     stage('Run docker on vm2') {
       steps {
        echo 'This is stage Run docker '
-        sh ' more /root/.ssh/id_rsa'
+           sh 'more /etc/passwd'
         sh 'ssh-keyscan -H 51.250.47.241 >> ~/.ssh/known_hosts'
         sh '''ssh root@51.250.47.241 << EOF
-	sudo docker pull rendoc72/jen-webapp:prod
-	docker run -d -p 8080:8080 jen-webapp:prod
+	docker pull rendoc72/jen-webapp:prod
+	docker run -d -p 8088:8080 jen-webapp:prod
 EOF'''
       }
     }
