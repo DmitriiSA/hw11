@@ -3,6 +3,7 @@ pipeline {
 
     docker {
       image 'rendoc72/mav-jenkins-ag'
+      args '-v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.docker:/root/.docker'
     }
 
   }
@@ -48,10 +49,12 @@ pipeline {
       steps {
        echo 'This is stage Make docker image '
         // Проверяем, что докер работает
+                sh 'id -nG $(whoami)'
+                sh 'docker version'
                 sh '''
                     echo "Проверка докер:"
-                    sudo systemctl status docker
-                    sudo systemctl start docker
+                     systemctl status docker
+                     systemctl start docker
                 '''
         sh 'cd  /tmp/hw11/'
         sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp .'
