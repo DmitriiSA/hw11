@@ -74,6 +74,7 @@ pipeline {
     stage('Run docker on vm2') {
       steps {
        echo 'This is stage Run docker '
+        sh ' more /root/.ssh/id_rsa'
         sh 'ssh-keyscan -H 51.250.47.241 >> ~/.ssh/known_hosts'
         sh '''ssh root@51.250.47.241 << EOF
 	sudo docker pull rendoc72/jen-webapp:prod
