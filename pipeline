@@ -15,15 +15,15 @@ pipeline {
 
     stage('Copy source') {
       steps {
+       echo 'This is stage Copy source'
          git 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git /tmp/boxfuse-sample-java-war-hello'
          git 'https://github.com/DmitriiSA/hw11.git /tmp/hw11'
-        sh 'ssh-keyscan -H devbuild-srv01 >> ~/.ssh/known_hosts'
-        sh 'scp jenkins@devbuild-srv01:/home/jenkins/build/configs/staging/gateway-api/application-business-config-defaults.yml gateway-api/src/main/resources/application-business-config-defaults.yml'
       }
     }
 
     stage('Build war') {
       steps {
+        echo 'This is stage Build war '
         sh 'cd /tmp/boxfuse-sample-java-war-hello && mvn package'
         sh 'cp /tmp/boxfuse-sample-java-war-hello/target/hello-1.0.war /tmp/hw11/hello-1.0.war'
       }
@@ -31,6 +31,7 @@ pipeline {
 
     stage('Make docker image') {
       steps {
+       echo 'This is stage Make docker image '
         sh 'cd  /tmp/hw11/'
         sh 'docker -f dockerfile-app -t jen-webapp .'
         sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
@@ -39,6 +40,7 @@ pipeline {
 
     stage('Login to Docker Hub') {
     steps{
+            echo 'This is stage Login to Docker Hub '
 	sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 	echo 'Login Completed'
     }
@@ -46,6 +48,7 @@ pipeline {
 
     stage('Push Image to Docker Hub') {
         steps{
+        echo 'This is stage Push Image '
         sh 'docker push rendoc72/mav-jenkins-ag:prod'
         echo 'Push Image Completed'
         }
@@ -53,8 +56,9 @@ pipeline {
 
     stage('Run docker on devbe-srv01') {
       steps {
-        sh 'ssh-keyscan -H 158.160.189.0 >> ~/.ssh/known_hosts'
-        sh '''ssh root@158.160.189.0 << EOF
+       echo 'This is stage Run docker '
+        sh 'ssh-keyscan -H 51.250.47.241 >> ~/.ssh/known_hosts'
+        sh '''ssh root@51.250.47.241 << EOF
 	sudo docker pull rendoc72/jen-webapp:prod
 	docker run -d -p 8080:8080 jen-webapp:prod
 EOF'''
