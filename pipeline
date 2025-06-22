@@ -16,8 +16,24 @@ pipeline {
     stage('Copy source') {
       steps {
        echo 'This is stage Copy source'
-         git 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git /tmp/boxfuse-sample-java-war-hello'
-         git 'https://github.com/DmitriiSA/hw11.git /tmp/hw11'
+        // Клонируем репозиторий в указанную директорию
+                dir('/tmp/boxfuse-sample-java-war-hello') {
+         git 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git'
+         }
+        // Проверяем, что директория существует
+                sh '''
+                    echo "Проверка директории:"
+                    ls -la /tmp/boxfuse-sample-java-war-hello
+                '''
+        // Клонируем репозиторий в указанную директорию
+                dir('/tmp/hw11') {
+         git 'https://github.com/DmitriiSA/hw11.git'
+         }
+        // Проверяем, что директория существует
+                sh '''
+                    echo "Проверка директории:"
+                    ls -la /tmp/hw11
+                '''
       }
     }
 
