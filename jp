@@ -48,7 +48,7 @@ pipeline {
       steps {
        echo 'This is stage Make docker image '
         sh 'cd  /tmp/hw11/'
-        sh 'docker build -f dockerfile-app -t jen-webapp .'
+        sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp .'
         sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
       }
     }
