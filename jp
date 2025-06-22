@@ -58,7 +58,7 @@ pipeline {
     stage('Login to Docker Hub') {
     steps{
             echo 'This is stage Login to Docker Hub '
-	sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+	sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 	echo 'Login Completed'
     }
     }
@@ -66,12 +66,12 @@ pipeline {
     stage('Push Image to Docker Hub') {
         steps{
         echo 'This is stage Push Image '
-        sh 'docker push rendoc72/mav-jenkins-ag:prod'
+        sh 'docker push rendoc72/jen-webapp:prod'
         echo 'Push Image Completed'
         }
     }
 
-    stage('Run docker on devbe-srv01') {
+    stage('Run docker on vm2') {
       steps {
        echo 'This is stage Run docker '
         sh 'ssh-keyscan -H 51.250.47.241 >> ~/.ssh/known_hosts'
