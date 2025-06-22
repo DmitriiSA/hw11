@@ -18,9 +18,7 @@ pipeline {
        echo 'This is stage Copy source'
         // Клонируем репозиторий в указанную директорию
                sh 'mkdir /tmp/boxfuse-sample-java-war-hello'
-                dir('/tmp/boxfuse-sample-java-war-hello') {
-         git 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git'
-         }
+               sh ' git clone  https://github.com/boxfuse/boxfuse-sample-java-war-hello.git /tmp/boxfuse-sample-java-war-hello'
         // Проверяем, что директория существует
                 sh '''
                     echo "Проверка директории:"
@@ -28,9 +26,8 @@ pipeline {
                 '''
         // Клонируем репозиторий в указанную директорию
 	       sh 'mkdir /tmp/hw11'
-                dir('/tmp/hw11') {
-         git 'https://github.com/DmitriiSA/hw11.git'
-         }
+           sh ' git clone https://github.com/DmitriiSA/hw11.git  /tmp/hw11'
+
         // Проверяем, что директория существует
                 sh '''
                     echo "Проверка директории:"
@@ -51,7 +48,7 @@ pipeline {
       steps {
        echo 'This is stage Make docker image '
         sh 'cd  /tmp/hw11/'
-        sh 'docker -f dockerfile-app -t jen-webapp .'
+        sh 'docker build -f dockerfile-app -t jen-webapp .'
         sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
       }
     }
