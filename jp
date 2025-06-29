@@ -83,7 +83,7 @@ pipeline {
       steps {
        echo 'This is stage Run docker '
            sh 'more /etc/passwd'
-        sh 'ssh-keyscan -H 51.250.47.241 >> ~/.ssh/known_hosts'
+        sh 'ssh-keyscan -H 158.160.186.14 >> ~/.ssh/known_hosts'
         sh '''ssh root@51.250.47.241 << EOF
 	docker pull rendoc72/jen-webapp:prod
 	docker run -d -p 8088:8080 jen-webapp:prod
