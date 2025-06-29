@@ -3,7 +3,7 @@ pipeline {
 
     docker {
       image 'rendoc72/mav-jenkins-ag'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+      args '--privileged --user root -v /var/run/docker.sock:/var/run/docker.sock'
     }
 
   }
@@ -55,7 +55,15 @@ pipeline {
         sh 'cd  /tmp/hw11'
         sh 'pwd'
         sh ' ls -la /tmp/hw11'
-        sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp .'
+        // Копируем WAR файл в текущую директорию
+        sh 'cp /tmp/boxfuse-sample-java-war-hello/target/hello-1.0.war ./hello-1.0.war'
+        // Копируем Dockerfile в текущую директорию
+        sh 'cp /tmp/hw11/dockerfile-app ./Dockerfile'
+        // Проверяем наличие файлов
+        sh 'ls -la'
+       // Собираем образ из текущего контекста
+        sh 'docker build -t jen-webapp .'
+        //sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp .'
         //sh 'docker build -f /tmp/hw11/dockerfile-app -t jen-webapp . --file /tmp/hw11/hello-1.0.war'
         sh 'docker image tag jen-webapp rendoc72/jen-webapp:prod'
       }
@@ -84,9 +92,9 @@ pipeline {
        echo 'This is stage Run docker '
            sh 'more /etc/passwd'
         sh 'ssh-keyscan -H 158.160.186.14 >> ~/.ssh/known_hosts'
-        sh '''ssh root@51.250.47.241 << EOF
+        sh '''ssh root@158.160.186.14 << EOF
 	docker pull rendoc72/jen-webapp:prod
-	docker run -d -p 8088:8080 jen-webapp:prod
+	docker run -d -p 8088:8080 rendoc72/jen-webapp:prod
 EOF'''
       }
     }
